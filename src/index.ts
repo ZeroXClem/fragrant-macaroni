@@ -1,4 +1,18 @@
-import { Client, isFullPage, iteratePaginatedAPI } from "@notionhq/client";
+import { Client, isFullPage, PaginatedList, PageObjectResponse, PartialPageObjectResponse } from "@notionhq/client";
+
+// Type guard for PageObjectResponse or PartialPageObjectResponse
+function isPageResponse(response: any): response is PaginatedList<PageObjectResponse | PartialPageObjectResponse> {
+  return 'results' in response && response.results.every((item: any) => item.object === 'page');
+}
+
+async function iteratePaginatedAPI<T>(apiCall: (...args: any[]) => Promise<PaginatedList<T>>, ...args: any[]): AsyncIterable<T[]> {
+  let result = await apiCall(...args);
+  if (isPageResponse(result)) {
+    yield* result.results;
+  }
+  // Implementation to handle additional cases - if required, for example:
+  // while(result.has_more) { ... add your code to handle pagination ... }
+}
 import dotenv from "dotenv";
 import fs from "fs-extra";
 import { savePage } from "./render";
