@@ -1,4 +1,4 @@
-import { Client, isFullPage } from "@notionhq/client";
+import { Client, isFullPage, PaginatedList, PageObjectResponse, PartialPageObjectResponse } from "@notionhq/client";
 
 // Type guard for PageObjectResponse or PartialPageObjectResponse
 function isPageResponse(response: any): response is PaginatedList<PageObjectResponse | PartialPageObjectResponse> {
