@@ -31,7 +31,7 @@ async function main() {
       if (!isFullPage(page)) continue;
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
-      await savePage(page, notion, mount);
+      if (page.object === 'page') await savePage(page, notion, mount);
     }
   }
 
@@ -40,7 +40,7 @@ async function main() {
     const page = await notion.pages.retrieve({ page_id: mount.page_id });
     if (!isFullPage(page)) continue;
     page_ids.push(page.id)
-    await savePage(page, notion, mount);
+    if (page.object === 'page') await savePage(page, notion, mount);
   }
 
   // remove posts that exist locally but not in Notion Database
