@@ -1,4 +1,5 @@
 import { Client, isFullPage, iteratePaginatedAPI } from "@notionhq/client";
+import { PageObjectResponse, PartialPageObjectResponse } from "./types";
 import dotenv from "dotenv";
 import fs from "fs-extra";
 import { savePage } from "./render";
@@ -29,7 +30,7 @@ async function main() {
       database_id: mount.database_id,
     })) {
       if (!isFullPage(page)) continue;
-      if (page instanceof PageObjectResponse || page instanceof PartialPageObjectResponse) {
+      if (page instanceof PageObjectResponse) {
         console.info(`[Info] Start processing page ${page.id}`)
         page_ids.push(page.id)
         await savePage(page, notion, mount);
