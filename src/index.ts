@@ -28,7 +28,8 @@ async function main() {
     for await (const page of iteratePaginatedAPI(notion.databases.query, {
       database_id: mount.database_id,
     })) {
-      if (!isFullPage(page)) continue;
+      if (!isFullPage(page as any)) throw new Error('The page variable is not of the correct type.'); // Type predicate to ensure page is full or partial page
+    
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
       await savePage(page, notion, mount);
@@ -38,7 +39,8 @@ async function main() {
   // process mounted pages
   for (const mount of config.mount.pages) {
     const page = await notion.pages.retrieve({ page_id: mount.page_id });
-    if (!isFullPage(page)) continue;
+    if (!isFullPage(page as any)) throw new Error('The retrieved page variable is not of the correct type.'); // Type predicate to ensure retrieved page is full or partial page
+    
     page_ids.push(page.id)
     await savePage(page, notion, mount);
   }
