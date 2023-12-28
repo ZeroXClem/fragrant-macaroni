@@ -28,7 +28,13 @@ async function main() {
     for await (const page of iteratePaginatedAPI(notion.databases.query, {
       database_id: mount.database_id,
     })) {
-      if (!isFullPage(page)) continue;
+      if ('parent' in page) {
+        if (!isFullPage(page)) continue;
+      } else if ('object' in page && page.object === 'database') {
+        throw new Error('Attempted to use a database object where a page was expected.');
+      } else {
+        throw new Error('The provided object is neither a full page nor a partial database response and cannot be processed.');
+      }
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
       await savePage(page, notion, mount);
