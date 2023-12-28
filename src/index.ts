@@ -28,7 +28,10 @@ async function main() {
     for await (const page of iteratePaginatedAPI(notion.databases.query, {
       database_id: mount.database_id,
     })) {
-      if (!isFullPage(page)) continue;
+      if (!isFullPage(page)) {
+      if ('parent' in page) continue; // type guard for PageObjectResponse
+      throw new Error('The page is not a full page object.');
+    }
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
       if (page instanceof PageObjectResponse || page instanceof PartialPageObjectResponse) {
@@ -40,7 +43,10 @@ async function main() {
   // process mounted pages
   for (const mount of config.mount.pages) {
     const page = await notion.pages.retrieve({ page_id: mount.page_id });
-    if (!isFullPage(page)) continue;
+    if (!isFullPage(page)) {
+      if ('parent' in page) continue; // type guard for PageObjectResponse
+      throw new Error('The page is not a full page object.');
+    }
     page_ids.push(page.id)
     await savePage(page, notion, mount);
   }
