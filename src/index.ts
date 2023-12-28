@@ -28,6 +28,7 @@ async function main() {
     for await (const page of iteratePaginatedAPI(notion.databases.query, {
       database_id: mount.database_id,
     })) {
+      if (!(page instanceof PageObjectResponse)) throw new Error('The page variable is not of the correct type.');
       if (!isFullPage(page as any)) throw new Error('The page variable is not of the correct type.'); // Type predicate to ensure page is full or partial page
     
       console.info(`[Info] Start processing page ${page.id}`)
