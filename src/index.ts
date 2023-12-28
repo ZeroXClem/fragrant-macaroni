@@ -32,7 +32,12 @@ async function main() {
       if (!isFullPage(page)) continue;
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
-      await savePage(page, notion, mount);
+      if (page.object === 'page') {
+        await savePage(page, notion, mount);
+      } else if (page.object === 'database') {
+        // Handle DatabaseObjectResponse or PartialDatabaseObjectResponse
+        console.info(`[Info] Skipping database object ${page.id}`);
+      }
     }
   }
 
