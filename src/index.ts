@@ -2,6 +2,11 @@ import { Client, isFullPage, iteratePaginatedAPI } from "@notionhq/client";
 import dotenv from "dotenv";
 import fs from "fs-extra";
 import { savePage } from "./render";
+// Assuming PartialDatabaseObjectResponse is not already defined in another file
+type PartialDatabaseObjectResponse = {
+  id: string;
+  // and other necessary properties
+};
 import { loadConfig } from "./config";
 import { getAllContentFiles, getContentFile } from "./file";
 import path from "path";
@@ -25,11 +30,11 @@ async function main() {
   // process mounted databases
   for (const mount of config.mount.databases) {
     fs.ensureDirSync(`content/${mount.target_folder}`);
-    for await (const page of iteratePaginatedAPI(notion.databases.query, {
+    for await (let page of iteratePaginatedAPI(notion.databases.query, {
       database_id: mount.database_id,
     })) {
       if (!isFullPage(page)) {
-        page = { id: page.id } as PartialDatabaseObjectResponse;
+        page = { id: page.id } as PageObjectResponse | PartialPageObjectResponse;
         // Adjust the object to match the 'PageObjectResponse' or 'PartialPageObjectResponse' types
         // After this point, 'page' will no longer just be a 'PartialDatabaseObjectResponse' and the TypeScript error should be resolved
       }
