@@ -34,7 +34,9 @@ async function main() {
     }
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
+      if (page instanceof PageObjectResponse || page instanceof PartialPageObjectResponse) {
       await savePage(page, notion, mount);
+    }
     }
   }
 
