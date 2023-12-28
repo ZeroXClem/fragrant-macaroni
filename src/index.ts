@@ -31,7 +31,9 @@ async function main() {
       if (!isFullPage(page)) continue;
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
-      await savePage(page, notion, mount);
+      if (page instanceof PageObjectResponse || page instanceof PartialPageObjectResponse) {
+        await savePage(page, notion, mount);
+      }
     }
   }
 
