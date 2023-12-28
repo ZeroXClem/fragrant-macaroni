@@ -1,4 +1,4 @@
-import { Client, isFullPage, iteratePaginatedAPI } from "@notionhq/client";
+import { Client, isFullPage, iteratePaginatedAPI, PageObjectResponse, PartialPageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import dotenv from "dotenv";
 import fs from "fs-extra";
 import { savePage } from "./render";
@@ -28,6 +28,7 @@ async function main() {
     for await (const page of iteratePaginatedAPI(notion.databases.query, {
       database_id: mount.database_id,
     })) {
+      if (!(page instanceof PageObjectResponse || page instanceof PartialPageObjectResponse)) continue;
       if (!isFullPage(page)) {
       if ('parent' in page) continue; // type guard for PageObjectResponse
       throw new Error('The page is not a full page object.');
@@ -41,6 +42,7 @@ async function main() {
   // process mounted pages
   for (const mount of config.mount.pages) {
     const page = await notion.pages.retrieve({ page_id: mount.page_id });
+    if (!(page instanceof PageObjectResponse || page instanceof PartialPageObjectResponse)) continue;
     if (!isFullPage(page)) {
       if ('parent' in page) continue; // type guard for PageObjectResponse
       throw new Error('The page is not a full page object.');
