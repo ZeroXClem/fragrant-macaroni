@@ -28,6 +28,7 @@ async function main() {
     for await (const page of iteratePaginatedAPI(notion.databases.query, {
       database_id: mount.database_id,
     })) {
+      if (page.object !== 'page') continue;
       if (!isFullPage(page)) continue;
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
