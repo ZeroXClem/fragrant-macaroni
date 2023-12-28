@@ -1,13 +1,19 @@
 import { Client, isFullPage } from "@notionhq/client";
 import {
-  PageObjectResponse
+  PageObjectResponse,
+  RichTextItemResponse
 } from "@notionhq/client/build/src/api-endpoints";
+
+// Define missing types based on PageObjectResponse and properties used
+export type PartialPageObjectResponse = Pick<PageObjectResponse, 'properties'> & { parent?: PageObjectResponse['parent']; };
+export type PartialDatabaseObjectResponse = Pick<PageObjectResponse, 'properties'>;
+export type DatabaseObjectResponse = Omit<PageObjectResponse, 'properties'> & { properties: { title: { title: RichTextItemResponse[]; } | { Name: RichTextItemResponse[]; }; } };
 
 export function getPageTitle(page: PageObjectResponse | PartialPageObjectResponse | PartialDatabaseObjectResponse | DatabaseObjectResponse): string {
   if ('parent' in page || 'properties' in page) {
     const title = page.properties.Name ?? page.properties.title;
     if (title.type === "title") {
-      return title.title.map((text) => text.plain_text).join("");
+      return title.title.map((text: RichTextItemResponse) => text.plain_text).join("");
     }
   }
   if ('title' in page) {
