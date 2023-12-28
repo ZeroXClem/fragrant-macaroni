@@ -1,4 +1,4 @@
-import { Client, isFullPage, iteratePaginatedAPI } from "@notionhq/client";
+import { Client, isFullPage, iteratePaginatedAPI, PageObjectResponse, PartialPageObjectResponse, PartialDatabaseObjectResponse } from "@notionhq/client";
 import dotenv from "dotenv";
 import fs from "fs-extra";
 import { savePage } from "./render";
@@ -34,7 +34,9 @@ async function main() {
       page_ids.push(page.id)
       if (page instanceof PageObjectResponse || page instanceof PartialPageObjectResponse) {
       await savePage(page, notion, mount);
-    }
+      } else if (page instanceof PartialDatabaseObjectResponse) {
+        // Handle 'PartialDatabaseObjectResponse' type or skip it
+      }
     }
   }
 
