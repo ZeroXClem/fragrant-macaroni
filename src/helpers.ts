@@ -3,13 +3,18 @@ import {
   PageObjectResponse
 } from "@notionhq/client/build/src/api-endpoints";
 
-export function getPageTitle(page: PageObjectResponse): string {
-  const title = page.properties.Name ?? page.properties.title;
-  if (title.type === "title") {
-    return title.title.map((text) => text.plain_text).join("");
+export function getPageTitle(page: PageObjectResponse | PartialPageObjectResponse | PartialDatabaseObjectResponse | DatabaseObjectResponse): string {
+  if ('parent' in page || 'properties' in page) {
+    const title = page.properties.Name ?? page.properties.title;
+    if (title.type === "title") {
+      return title.title.map((text) => text.plain_text).join("");
+    }
+  }
+  if ('title' in page) {
+    return page.title;
   }
   throw Error(
-    `page.properties.Name has type ${title.type} instead of title. The underlying Notion API might has changed, please report an issue to the author.`
+    `Cannot extract page title, given object does not match expected page types. The underlying Notion API might have changed, please report an issue to the author.`
   );
 }
 

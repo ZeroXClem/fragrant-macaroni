@@ -5,7 +5,7 @@ import { savePage } from "./render";
 import { loadConfig } from "./config";
 import { getAllContentFiles, getContentFile } from "./file";
 import path from "path";
-import { getFileName, getPageTitle } from "./helpers";
+import { getFileName, getPageTitle, isPageObjectType } from "./helpers";
 
 dotenv.config();
 
@@ -40,8 +40,13 @@ async function main() {
 
   // process mounted pages
   for (const mount of config.mount.pages) {
-    const page = await notion.pages.retrieve({ page_id: mount.page_id });
-    if (!isFullPage(page)) continue;
+    const pageResponse = await notion.pages.retrieve({ page_id: mount.page_id });
+    if (!isFullPage(pageResponse)) continue;
+    const page = isPageObjectType(pageResponse) ? pageResponse : convertToPageObject(pageResponse);
+    if (!page) {
+      console.error(`[Error] Failed to convert page response to PageObject. Page ID: ${mount.page_id}`);
+      continue;
+    }
     page_ids.push(page.id)
     await savePage(page, notion, mount);
   }
