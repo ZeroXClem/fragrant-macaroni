@@ -1,5 +1,8 @@
 import { Client, isFullPage, iteratePaginatedAPI } from "@notionhq/client";
 import dotenv from "dotenv";
+
+interface PageObjectResponse { /* properties */ }
+type PartialPageObjectResponse = Partial<PageObjectResponse>;
 import fs from "fs-extra";
 import { savePage } from "./render";
 import { loadConfig } from "./config";
