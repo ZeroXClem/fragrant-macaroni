@@ -1,4 +1,4 @@
-import { Client, isFullBlock, iteratePaginatedAPI } from "@notionhq/client";
+import { Client } from "@notionhq/client";
 
 const userDefinedConfig = require('../notion-hugo.config')
 
@@ -59,10 +59,10 @@ export async function loadConfig(): Promise<Config> {
       auth: process.env.NOTION_TOKEN,
     });
   
-    for await (const block of iteratePaginatedAPI(notion.blocks.children.list, {
+    const children = await notion.blocks.children.list({
       block_id: pageId
-    })) {
-      if (!isFullBlock(block)) continue;
+    });
+    for (const block of children.results) {
       if (block.type === 'child_database') {
         config.mount.databases.push({
           database_id: block.id,
