@@ -20,4 +20,5 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           npm install
+          npm list @notionhq/client
           npm run typecheck
