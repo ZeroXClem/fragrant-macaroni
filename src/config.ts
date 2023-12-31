@@ -1,4 +1,4 @@
-import { Client, isFullBlock, iteratePaginatedAPI } from "@notionhq/client";
+import { Client } from "@notionhq/client";
 
 const userDefinedConfig = require('../notion-hugo.config')
 
