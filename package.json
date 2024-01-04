@@ -19,7 +19,7 @@
     "start": "ts-node src/index.ts",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
-    "format": "prettier --write src/**/*.ts"
+    "check-packages": "npm view @notionhq/client@<version> version"
   },
   "keywords": [
     "Notion",
