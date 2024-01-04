@@ -12,8 +12,13 @@ export async function sh(
 ): Promise<{ stdout: string; stderr: string }> {
   return new Promise(function (resolve, reject) {
     exec(cmd, (err, stdout, stderr) => {
-      if (err && panic) {
-        reject(err);
+      if (err) {
+        console.error(`Error executing command "${cmd}": ${err}`);
+        if (panic) {
+          reject(err);
+        } else {
+          resolve({ stdout, stderr });
+        }
       } else {
         resolve({ stdout, stderr });
       }
