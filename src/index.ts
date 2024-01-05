@@ -42,7 +42,7 @@ async function main() {
 
   // process mounted pages
   for (const mount of config.mount.pages) {
-    const page = await notion.pages.retrieve({ page_id: mount.page_id });
+    const page: Page = await notion.pages.retrieve({ page_id: mount.page_id });
     if (!isFullPage(page)) continue;
     page_ids.push(page.id)
     await savePage(page, notion, mount);
