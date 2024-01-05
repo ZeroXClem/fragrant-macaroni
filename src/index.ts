@@ -5,7 +5,14 @@ import dotenv from "dotenv";
 import fs from "fs-extra";
 import { savePage } from "./render";
 import { loadConfig } from "./config";
-import { getAllContentFiles, getContentFile } from "./file";
+import { getAllContentFiles } from "./file";
+import { Client, isFullPage, iteratePaginatedAPI } from "@notionhq/client";
+import { Page } from '@notionhq/client';
+import { Client } from '@notionhq/client';
+import dotenv from "dotenv";
+import fs from "fs-extra";
+import { savePage } from "./render";
+import { loadConfig } from "./config";
 import path from "path";
 import { getFileName, getPageTitle } from "./helpers";
 
@@ -49,7 +56,7 @@ async function main() {
   }
 
   // remove posts that exist locally but not in Notion Database
-  const contentFiles = getAllContentFiles('content')
+  const contentFiles = getAllContentFiles('content/');
   for (const file of contentFiles) {
     if (!page_ids.includes(file.metadata.id)) {
       fs.removeSync(file.filepath)
