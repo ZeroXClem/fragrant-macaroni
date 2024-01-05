@@ -1,4 +1,4 @@
-import { Client, isFullPage, iteratePaginatedAPI, Page } from "@notionhq/client";
+import { Client } from '@notionhq/client/build/src/Client';
 import dotenv from "dotenv";
 import fs from "fs-extra";
 import { savePage } from "./render";
