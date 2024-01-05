@@ -2,7 +2,7 @@ import { exec } from "child_process";
 
 /**
  * Execute simple shell command (async wrapper).
- * @param {String} cmd
+ * @param {string} cmd
  * @return {Object} { stdout: String, stderr: String }
  */
 
