@@ -17,7 +17,7 @@ async function main() {
   console.info('[Info] Config loaded ')
 
   const notion = new Client({
-    auth: process.env.NOTION_TOKEN,
+    auth: process.env.NOTION_TOKEN || '',
   });
 
   const page_ids: string[] = []
