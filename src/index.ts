@@ -58,7 +58,7 @@ async function main() {
   // remove posts that exist locally but not in Notion Database
   const contentFiles = getAllContentFiles('content/');
   for (const file of contentFiles) {
-    if (!page_ids.includes(file.metadata.id)) {
+    if (!page_ids.includes(file.metadata.id.toString())) {
       fs.removeSync(file.filepath)
     }
   }
