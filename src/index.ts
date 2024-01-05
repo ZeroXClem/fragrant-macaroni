@@ -1,4 +1,4 @@
-import { Client, isFullPage, iteratePaginatedAPI, Page } from "@notionhq/client";
+import { Client } from '@notionhq/client/build/src/Client';
 import dotenv from "dotenv";
 import fs from "fs-extra";
 import { savePage } from "./render";
@@ -59,6 +59,7 @@ async function main() {
 main()
   .then(() => process.exit(0))
   .catch((err) => {
-    console.error(err);
+    console.error(err.message);
+    console.error(err.stack);
     process.exit(1);
   });
