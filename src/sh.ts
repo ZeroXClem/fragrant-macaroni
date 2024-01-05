@@ -10,7 +10,7 @@ export async function sh(
   cmd: string,
   panic: boolean = true
 ): Promise<{ stdout: string; stderr: string }> {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     exec(cmd, (err, stdout, stderr) => {
       if (err && panic) {
         reject(err);
