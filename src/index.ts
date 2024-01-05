@@ -1,4 +1,5 @@
-import { Client, isFullPage, iteratePaginatedAPI, Page } from "@notionhq/client";
+import { Client, isFullPage, iteratePaginatedAPI } from "@notionhq/client";
+import { Page } from '@notionhq/client';
 import { Client } from '@notionhq/client';
 import dotenv from "dotenv";
 import fs from "fs-extra";
@@ -33,7 +34,7 @@ async function main() {
       if (!isFullPage(page)) continue;
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
-      if (page instanceof Page) {
+      if (isFullPage(page)) {
       await savePage(page, notion, mount); // pass notion and mount as arguments
     }
     }
