@@ -34,7 +34,7 @@ async function main() {
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
       if (page instanceof Page) {
-      await savePage(page, notion, mount);
+      await savePage(page, notion, mount, notion);
     }
     }
   }
