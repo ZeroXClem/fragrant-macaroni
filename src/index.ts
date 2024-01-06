@@ -43,6 +43,19 @@ async function main() {
   for (const mount of config.mount.pages) {
     const page = await notion.pages.retrieve({ page_id: mount.page_id });
     if (!isFullPage(page)) continue;
+    page_ids.push(page.id);
+    await savePage(page, notion, mount);
+  }
+  
+  // remove posts that exist locally but not in Notion Database
+  const contentFiles = getAllContentFiles('content');
+  for (const file of contentFiles) {
+    if (!page_ids.includes(file.metadata.id)) {
+      fs.removeSync(file.filepath);
+    }
+  }
+    const page = await notion.pages.retrieve({ page_id: mount.page_id });
+    if (!isFullPage(page)) continue;
     page_ids.push(page.id)
     await savePage(page, notion, mount);
   }
