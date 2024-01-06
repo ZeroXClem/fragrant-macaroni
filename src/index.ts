@@ -1,7 +1,7 @@
 import { Client } from "@notionhq/client";
 import { isFullPage, iteratePaginatedAPI, Page } from "@notionhq/client";
 import dotenv from "dotenv";
-import fs from "fs-extra";
+
 import { savePage } from "./render";
 import { loadConfig } from "./config";
 import { getAllContentFiles, getContentFile } from "./file";
