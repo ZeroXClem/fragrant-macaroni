@@ -1,0 +1,25 @@
+import yaml from 'yaml';
+import fs from 'fs';
+
+const mainYmlPath = '.github/workflows/main.yml';
+const compatibleVersion = '^2.14.2';
+
+// Read the contents of the main.yml file
+const mainYmlContents = fs.readFileSync(mainYmlPath, 'utf8');
+
+// Parse the YAML contents
+const yamlObject = yaml.parse(mainYmlContents);
+
+// Modify the "steps" section of the YAML object
+if (yamlObject.jobs?.build?.steps) {
+  yamlObject.jobs.build.steps.push({
+    name: 'Install @notionhq/client package',
+    run: `npm install @notionhq/client@${compatibleVersion}`,
+  });
+}
+
+// Convert the modified YAML object back to a string
+const modifiedYmlContents = yaml.stringify(yamlObject);
+
+// Write the modified YAML string back to the main.yml file
+fs.writeFileSync(mainYmlPath, modifiedYmlContents);
