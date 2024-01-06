@@ -1,6 +1,7 @@
-import { Client, isFullPage, iteratePaginatedAPI, Page } from "@notionhq/client";
+import { Client } from "@notionhq/client";
+import { isFullPage, iteratePaginatedAPI, Page } from "@notionhq/client";
 import dotenv from "dotenv";
-import fs from "fs-extra";
+
 import { savePage } from "./render";
 import { loadConfig } from "./config";
 import { getAllContentFiles, getContentFile } from "./file";
@@ -16,7 +17,7 @@ async function main() {
   console.info('[Info] Config loaded ')
 
   const notion = new Client({
-    auth: process.env.NOTION_TOKEN,
+    auth: process.env.NOTION_TOKEN || '',
   });
 
   const page_ids: string[] = []
@@ -25,7 +26,7 @@ async function main() {
   // process mounted databases
   for (const mount of config.mount.databases) {
     fs.ensureDirSync(`content/${mount.target_folder}`);
-    for await (const page of iteratePaginatedAPI(notion.databases.query, {
+    for await (const page of notion.databases.query({
       database_id: mount.database_id,
     })) {
       if (page.object !== 'page') continue;
@@ -33,13 +34,26 @@ async function main() {
       console.info(`[Info] Start processing page ${page.id}`)
       page_ids.push(page.id)
       if (page instanceof Page) {
-      await savePage(page, notion, mount);
+      await savePage(page, notion, mount, notion);
     }
     }
   }
 
   // process mounted pages
   for (const mount of config.mount.pages) {
+    const page = await notion.pages.retrieve({ page_id: mount.page_id });
+    if (!isFullPage(page)) continue;
+    page_ids.push(page.id);
+    await savePage(page, notion, mount);
+  }
+  
+  // remove posts that exist locally but not in Notion Database
+  const contentFiles = getAllContentFiles('content');
+  for (const file of contentFiles) {
+    if (!page_ids.includes(file.metadata.id)) {
+      fs.removeSync(file.filepath);
+    }
+  }
     const page = await notion.pages.retrieve({ page_id: mount.page_id });
     if (!isFullPage(page)) continue;
     page_ids.push(page.id)
