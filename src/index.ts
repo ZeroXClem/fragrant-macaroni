@@ -1,4 +1,4 @@
-import { Client, isFullPage, iteratePaginatedAPI, Page } from "@notionhq/client";
+import { Client, isFullPage, iteratePaginatedAPI, Page } from "@notionhq/client/build/src/api-endpoints";
 import dotenv from "dotenv";
 import fs from "fs-extra";
 import { savePage } from "./render";
@@ -40,7 +40,7 @@ async function main() {
 
   // process mounted pages
   for (const mount of config.mount.pages) {
-    const page = await notion.pages.retrieve({ page_id: mount.page_id });
+    const page = await notion.pages.retrieve({ page_id: mount.page_id, notion_version: 2021-08-16 });
     if (!isFullPage(page)) continue;
     page_ids.push(page.id)
     await savePage(page, notion, mount);
