@@ -1,4 +1,4 @@
-import { Client, isFullPage, iteratePaginatedAPI, Page } from "@notionhq/client";
+import { Client, isFullPage, iteratePaginatedDatabase, iteratePaginatedList, iteratePaginatedUserContent, Page } from "@notionhq/client";
 import dotenv from "dotenv";
 import fs from "fs-extra";
 import { savePage } from "./render";
@@ -25,7 +25,7 @@ async function main() {
   // process mounted databases
   for (const mount of config.mount.databases) {
     fs.ensureDirSync(`content/${mount.target_folder}`);
-    for await (const page of iteratePaginatedAPI(notion.databases.query, {
+    for await (const page of iteratePaginatedDatabase(notion.databases.query, {
       database_id: mount.database_id,
     })) {
       if (page.object !== 'page') continue;
